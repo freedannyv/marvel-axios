@@ -47,10 +47,11 @@ const routes = [
     },
   },
   {
-    path: "/feature/:url",
+    path: "/feature/:name",
     name: "feature",
     component: () =>
       import(/* webpackChunkName: "character" */ "@/components/Feature.vue"),
+    props: true,
     meta: {
       layout: () => import("@/layouts/MainLayout.vue"),
     },

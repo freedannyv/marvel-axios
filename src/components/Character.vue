@@ -37,11 +37,11 @@
         <p class="p-4 font-bold">Features</p>
       </div>
 
-      <div v-for="s in character.features" :key="s.id" class="p-2 block">
+      <div v-for="s in character.stories.items" :key="s.id" class="p-2 block">
         <router-link
           :to="{
             name: 'feature',
-            params: { url: 'test' },
+            params: { name: s.name },
           }"
         >
           {{ s.name }}

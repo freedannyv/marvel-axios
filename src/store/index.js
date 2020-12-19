@@ -11,7 +11,12 @@ export default new Vuex.Store({
     comic: {},
     characters: [],
     character: {},
+    feature: {},
   },
+  getters: {
+    feature: (state) => state.feature,
+  },
+
   // GET ALL
   mutations: {
     getMarvel: (state, payload) => {
@@ -60,7 +65,6 @@ export default new Vuex.Store({
           var ext = issue.thumbnail.extension;
           issue.image = `${url}/portrait_incredible.${ext}`;
           state.comic = issue;
-          console.log(state.comic);
         })
         .catch((err) => console.log(err));
     },
@@ -72,7 +76,6 @@ export default new Vuex.Store({
           `http://gateway.marvel.com/v1/public/characters/${characterId}?apikey=${public_key}`,
         )
         .then((res) => {
-          console.log(res);
           var characterDetails = res.data.data.results;
 
           characterDetails.forEach((item) => (state.character = item));
@@ -80,7 +83,24 @@ export default new Vuex.Store({
         })
         .catch((err) => console.log(err));
     },
+
+    // GET FEATURE
+    feature: function(state, name) {
+      let feat = state.character.stories.items.find(
+        (item) => item.name === name,
+      );
+      console.log(feat);
+
+      axios
+        .get(`${feat.resourceURI}?apikey=${public_key}`)
+        .then((res) => {
+          res.data.data.results.forEach((item) => (state.feature = item));
+          console.log(state.feature);
+        })
+        .catch((err) => console.log(err));
+    },
   },
+
   actions: {
     getMarvel: ({ commit }, payload) => {
       commit("getMarvel", payload);
@@ -91,12 +111,10 @@ export default new Vuex.Store({
     getCharacter: ({ commit }, characterId) => {
       commit("getCharacter", characterId);
     },
-  },
-  modules: {},
-
-  methods: {
-    createImage(url, size, ext) {
-      return `${url}/${size}.${ext}`;
+    feature: ({ commit }, name) => {
+      commit("feature", name);
     },
   },
+
+  modules: {},
 });

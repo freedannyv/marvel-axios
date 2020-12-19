@@ -2,7 +2,7 @@
   <div>
     <MyHeader />
     <MyNav />
-    <div class="min-h-screen">
+    <div class="min-h-screen mx-auto md:w-3/4">
       <slot></slot>
     </div>
     <MyFooter />

@@ -1,16 +1,27 @@
 <template>
-  <div></div>
+  <div>
+    <p>
+      {{ feature.title }}
+      {{ feature.characters.items }}
+      {{ feature.description }}
+    </p>
+  </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
-  //   created() {
-  //     axios.get(this.$router.params.url)
-  //     .then(res => {
-  //       console.log(res)
-  //       })
-  //     .catch(err => console.log(err))
-  //   }
+  data() {
+    return {
+      name: this.$route.params.name,
+    };
+  },
+  mounted() {
+    this.$store.dispatch("feature", this.name);
+  },
+  computed: {
+    ...mapGetters(["feature"]),
+  },
 };
 </script>
 

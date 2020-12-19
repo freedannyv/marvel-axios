@@ -2,22 +2,21 @@
   <div>
     <p class="text-center text-xl font-bold p-4">All Available Characters</p>
     <hr />
-    <div class="p-4">
-      <div class="grid grid-cols-2 gap-2 relative">
-        <router-link
-          :to="{ name: 'character', params: { id: c.id } }"
-          v-for="c in character"
-          :key="c.id"
-          class="flex items-center justify-center"
-        >
-          <img :src="c.image" alt="" />
-          <p
-            class="absolute font-bold text-xl text-white shadow-lg text-center"
-          >
+
+    <div class="grid grid-cols-3 xl:grid-cols-4 gap-1 relative p-4">
+      <router-link
+        :to="{ name: 'character', params: { id: c.id } }"
+        v-for="c in character"
+        :key="c.id"
+        class="text-white hover:text-red-600 transition relative"
+      >
+        <img :src="c.image" class="hover:bg-black" />
+        <div class="flex justify-center items-center">
+          <p class="font-bold text-sm shadow-lg text-center absolute top-0">
             {{ c.name }}
           </p>
-        </router-link>
-      </div>
+        </div>
+      </router-link>
     </div>
   </div>
 </template>
