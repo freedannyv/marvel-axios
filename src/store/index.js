@@ -76,10 +76,7 @@ export default new Vuex.Store({
           `http://gateway.marvel.com/v1/public/characters/${characterId}?apikey=${public_key}`,
         )
         .then((res) => {
-          var characterDetails = res.data.data.results;
-
-          characterDetails.forEach((item) => (state.character = item));
-          console.log(state.character);
+          state.character = res.data.data.results[0];
         })
         .catch((err) => console.log(err));
     },
@@ -89,12 +86,10 @@ export default new Vuex.Store({
       let feat = state.character.stories.items.find(
         (item) => item.name === name,
       );
-      console.log(feat);
-
       axios
         .get(`${feat.resourceURI}?apikey=${public_key}`)
         .then((res) => {
-          res.data.data.results.forEach((item) => (state.feature = item));
+          state.feature = res.data.data.results[0];
           console.log(state.feature);
         })
         .catch((err) => console.log(err));

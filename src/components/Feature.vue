@@ -2,9 +2,21 @@
   <div>
     <p>
       {{ feature.title }}
-      {{ feature.characters.items }}
-      {{ feature.description }}
     </p>
+    <br />
+    <p class="font-semibold">Featured in this story</p>
+    <ul class="">
+      <li v-for="member in feature.characters.items" :key="member.id">
+        {{ member.name }}
+      </li>
+    </ul>
+    <br />
+    <div v-if="feature.description">
+      <p class="font-semibold">Description</p>
+      <p>
+        {{ feature.description }}
+      </p>
+    </div>
   </div>
 </template>
 
