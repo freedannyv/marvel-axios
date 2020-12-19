@@ -27,7 +27,7 @@
 import { mapState } from "vuex";
 export default {
   mounted() {
-    this.$store.dispatch("getMarvelItem", "comics", this.$route.params.id);
+    this.$store.dispatch("getComic", this.$route.params.id);
   },
   methods: {
     back() {

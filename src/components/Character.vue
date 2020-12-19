@@ -9,7 +9,13 @@
     <p class="p-4 font-bold">
       {{ character.name }}
     </p>
-    <img :src="character.image" class="mx-auto" alt="" />
+    <img
+      :src="
+        `${character.thumbnail.path}/portrait_incredible.${character.thumbnail.extension}`
+      "
+      class="mx-auto"
+      alt=""
+    />
     <p class="border-b border-red-600 p-4">
       <span class="font-bold">Appearances:</span>
       {{ character.available }}

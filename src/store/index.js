@@ -10,7 +10,7 @@ export default new Vuex.Store({
     comics: [],
     comic: {},
     characters: [],
-    character: [],
+    character: {},
   },
   // GET ALL
   mutations: {
@@ -72,14 +72,11 @@ export default new Vuex.Store({
           `http://gateway.marvel.com/v1/public/characters/${characterId}?apikey=${public_key}`,
         )
         .then((res) => {
-          var characterDetails = res.data.data.results[0];
-          var url = characterDetails.thumbnail.path;
-          var ext = characterDetails.thumbnail.extension;
-          characterDetails.image = `${url}/portrait_incredible.${ext}`;
-          characterDetails.features = characterDetails.stories.items;
-          characterDetails.featuresUrl = characterDetails.stories.collectionURI;
-          characterDetails.available = characterDetails.stories.available;
-          state.character = characterDetails;
+          console.log(res);
+          var characterDetails = res.data.data.results;
+
+          characterDetails.forEach((item) => (state.character = item));
+          console.log(state.character);
         })
         .catch((err) => console.log(err));
     },
