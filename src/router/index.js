@@ -47,10 +47,20 @@ const routes = [
     },
   },
   {
-    path: "/feature/:name",
+    path: "/character/:id/:name",
     name: "feature",
     component: () =>
       import(/* webpackChunkName: "character" */ "@/components/Feature.vue"),
+    props: true,
+    meta: {
+      layout: () => import("@/layouts/MainLayout.vue"),
+    },
+  },
+  {
+    path: "/cart",
+    name: "cart",
+    component: () =>
+      import(/* webpackChunkName: "character" */ "@/views/Cart.vue"),
     props: true,
     meta: {
       layout: () => import("@/layouts/MainLayout.vue"),
@@ -62,6 +72,16 @@ const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition; // will go to last position on page if user presses ‘back’
+    } else {
+      if (to.hash) {
+        return { selector: to.hash }; // router will scroll to the hash selector eg. #feature
+      }
+      return { x: 0, y: 0 };
+    }
+  },
 });
 
 export default router;

@@ -9,56 +9,58 @@
     <p class="p-4 font-bold">
       {{ character.name }}
     </p>
-    <img
-      :src="
-        `${character.thumbnail.path}/portrait_incredible.${character.thumbnail.extension}`
-      "
-      class="mx-auto"
-      alt=""
-    />
+    <img :src="character.image" class="mx-auto" alt="" />
     <p class="border-b border-red-600 p-4">
       <span class="font-bold">Appearances:</span>
       {{ character.available }}
     </p>
 
     <!-- DESCRIPTION -->
-    <div v-if="character.description" class="border p-2 mt-4">
-      <div class="bg-gray-200 border">
-        <p class="p-4 font-bold">Description</p>
-      </div>
-      <p class="p-2">
-        {{ character.description }}
-      </p>
+    <div v-if="character.description">
+      <Heading>
+        Description
+        <template v-slot:content>
+          {{ character.description }}
+        </template>
+      </Heading>
     </div>
 
     <!-- FEATURES -->
-    <div class="border p-2 mt-4">
-      <div class="bg-gray-200 border">
-        <p class="p-4 font-bold">Features</p>
-      </div>
-
-      <div v-for="s in character.stories.items" :key="s.id" class="p-2 block">
-        <router-link
-          :to="{
-            name: 'feature',
-            params: { name: s.name },
-          }"
+    <Heading>
+      Features
+      <template v-slot:content>
+        <div
+          v-for="feature in character.features"
+          :key="feature.name"
+          class="p-2 block"
         >
-          {{ s.name }}
-        </router-link>
-      </div>
-    </div>
+          <router-link
+            :to="{
+              name: 'feature',
+              params: { name: feature.name, url: feature.resourceURI },
+            }"
+          >
+            {{ feature.name }}
+          </router-link>
+        </div>
+      </template>
+    </Heading>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
 import { public_key } from "@/marvel.js";
+import Heading from "@/utilities/Heading.vue";
 export default {
+  components: { Heading },
   data() {
     return {
       public_key,
     };
+  },
+  beforeRouteEnter(to, from, next) {
+    next();
   },
   mounted() {
     this.$store.dispatch("getCharacter", this.$route.params.id);

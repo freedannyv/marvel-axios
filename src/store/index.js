@@ -12,102 +12,129 @@ export default new Vuex.Store({
     characters: [],
     character: {},
     feature: {},
+    cart: [],
+    counter: 3,
   },
+  // GETTERS
   getters: {
     feature: (state) => state.feature,
+    cart: (state) => state.cart,
   },
 
-  // GET ALL
-  mutations: {
-    getMarvel: (state, payload) => {
+  // ACTIONS
+  actions: {
+    getMarvel: ({ commit }, payload) => {
       axios
         .get(
           `http://gateway.marvel.com/v1/public/${payload}?apikey=${public_key}`,
         )
-
         .then((res) => {
-          const results = res.data.data.results;
-          let counter = 0;
-          console.log(results);
-
           if (payload === "comics") {
-            state.comics = [];
-            results.forEach((item) => {
-              var url = results[counter].thumbnail.path;
-              var ext = results[counter].thumbnail.extension;
-              results[counter].image = `${url}/portrait_incredible.${ext}`;
-              state.comics.push(item);
-              counter++;
-            });
-          } else if (payload === "characters") {
-            state.characters = [];
-            results.forEach((item) => {
-              var url = results[counter].thumbnail.path;
-              var ext = results[counter].thumbnail.extension;
-              results[counter].image = `${url}/portrait_incredible.${ext}`;
-              state.characters.push(item);
-              counter++;
-            });
+            commit("getComics", res.data.data.results);
+          }
+
+          if (payload === "characters") {
+            commit("getCharacters", res.data.data.results);
           }
         })
         .catch((err) => console.log(err));
     },
-
-    // GET SINGLE COMIC
-    getComic(state, comicId) {
+    getComic: ({ commit }, comicId) => {
       axios
         .get(
           `http://gateway.marvel.com/v1/public/comics/${comicId}?apikey=${public_key}`,
         )
         .then((res) => {
-          var issue = res.data.data.results[0];
-          var url = issue.thumbnail.path;
-          var ext = issue.thumbnail.extension;
-          issue.image = `${url}/portrait_incredible.${ext}`;
-          state.comic = issue;
+          commit("getComic", res.data.data.results[0]);
         })
         .catch((err) => console.log(err));
     },
-
-    // GET SINGLE CHARACTER
-    getCharacter(state, characterId) {
+    getCharacter: ({ commit }, characterId) => {
       axios
         .get(
           `http://gateway.marvel.com/v1/public/characters/${characterId}?apikey=${public_key}`,
         )
         .then((res) => {
-          state.character = res.data.data.results[0];
+          commit("getCharacter", res.data.data.results[0]);
         })
         .catch((err) => console.log(err));
     },
 
-    // GET FEATURE
-    feature: function(state, name) {
-      let feat = state.character.stories.items.find(
-        (item) => item.name === name,
-      );
+    getFeature: ({ commit }, url) => {
       axios
-        .get(`${feat.resourceURI}?apikey=${public_key}`)
+        .get(`${url}?apikey=${public_key}`)
         .then((res) => {
-          state.feature = res.data.data.results[0];
-          console.log(state.feature);
+          commit("getFeature", res.data.data.results[0]);
         })
         .catch((err) => console.log(err));
+    },
+
+    addToCart: ({ commit }, payload) => {
+      commit("addToCart", payload);
+    },
+
+    rmvItem: ({ commit }, payload) => {
+      commit("rmvItem", payload);
     },
   },
 
-  actions: {
-    getMarvel: ({ commit }, payload) => {
-      commit("getMarvel", payload);
+  mutations: {
+    // GET FEATURE
+    getFeature: function(state, payload) {
+      state.feature = payload;
+      console.log(state.feature);
     },
-    getComic: ({ commit }, id) => {
-      commit("getComic", id);
+    // GET COMICS
+    getComics: function(state, comics) {
+      state.comics = [];
+      comics.forEach((comic) => {
+        var url = comic.thumbnail.path;
+        var ext = comic.thumbnail.extension;
+        comic.image = `${url}/portrait_incredible.${ext}`;
+        state.comics.push(comic);
+      });
     },
-    getCharacter: ({ commit }, characterId) => {
-      commit("getCharacter", characterId);
+
+    // GET SINGLE COMIC
+    getComic(state, payload) {
+      var url = payload.thumbnail.path;
+      var ext = payload.thumbnail.extension;
+      payload.image = `${url}/portrait_incredible.${ext}`;
+      state.comic = payload;
     },
-    feature: ({ commit }, name) => {
-      commit("feature", name);
+
+    // GET CHARACTERS
+    getCharacters: function(state, characters) {
+      state.characters = [];
+      characters.forEach((character) => {
+        var url = character.thumbnail.path;
+        var ext = character.thumbnail.extension;
+        character.image = `${url}/portrait_incredible.${ext}`;
+        state.characters.push(character);
+      });
+    },
+
+    // GET SINGLE CHARACTER
+    getCharacter: (state, payload) => {
+      var url = payload.thumbnail.path;
+      var ext = payload.thumbnail.extension;
+      payload.image = `${url}/portrait_incredible.${ext}`;
+      payload.features = payload.stories.items;
+      state.character = payload;
+      console.log(state.character);
+    },
+
+    // ADD ITEM TO CART
+    addToCart: (state, payload) => {
+      if (state.feature.id === payload) {
+        state.cart.push(state.feature);
+      }
+      console.log(state.cart);
+    },
+
+    // REMOVE ITEM FROM CART
+    rmvItem: (state, payload) => {
+      state.cart.splice(payload, 1);
     },
   },
 

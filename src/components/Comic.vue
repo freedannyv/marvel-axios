@@ -34,6 +34,17 @@ export default {
       return this.$router.go(-1);
     },
   },
+  beforeRouteLeave(to, from, next) {
+    if (this.confirmed) {
+      next();
+    } else {
+      if (confirm("Are you sure?")) {
+        next();
+      } else {
+        false;
+      }
+    }
+  },
   computed: {
     ...mapState({
       comic: (state) => state.comic,
