@@ -27,8 +27,8 @@ export default new Vuex.Store({
     getMarvel: ({ commit }, payload) => {
       axios
         .get(
-          `http://gateway.marvel.com/v1/public/${payload}?ts=${time_stamp}&apikey=${public_key}&hash=${hash}`,
-          // `http://gateway.marvel.com/v1/public/${payload}?apikey=${public_key}`,
+          `/${payload}?ts=${time_stamp}&apikey=${public_key}&hash=${hash}`,
+          // `/${payload}?apikey=${public_key}`,
         )
         .then((res) => {
           if (payload === "comics") {
@@ -43,9 +43,7 @@ export default new Vuex.Store({
     },
     getComic: ({ commit }, payload) => {
       axios
-        .get(
-          `http://gateway.marvel.com/v1/public/${payload}?ts=${time_stamp}&apikey=${public_key}&hash=${hash}`,
-        )
+        .get(`/${payload}?ts=${time_stamp}&apikey=${public_key}&hash=${hash}`)
         .then((res) => {
           commit("getComic", res.data.data.results[0]);
         })
@@ -54,7 +52,7 @@ export default new Vuex.Store({
     getCharacter: ({ commit }, payload) => {
       axios
         .get(
-          `http://gateway.marvel.com/v1/public/characters/${payload}?ts=${time_stamp}&apikey=${public_key}&hash=${hash}`,
+          `/characters/${payload}?ts=${time_stamp}&apikey=${public_key}&hash=${hash}`,
         )
         .then((res) => {
           commit("getCharacter", res.data.data.results[0]);
