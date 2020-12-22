@@ -9,7 +9,13 @@
     <p class="p-4 font-bold">
       {{ comic.title }}
     </p>
-    <img :src="comic.image" class="mx-auto" alt="" />
+    <img
+      :src="
+        `${comic.thumbnail.path}/portrait_incredible.${comic.thumbnail.extension}`
+      "
+      class="mx-auto"
+      alt=""
+    />
     <p class="border-b border-red-600 p-4">
       <span class="font-bold">Type:</span> {{ comic.format }}
     </p>
@@ -33,17 +39,6 @@ export default {
     back() {
       return this.$router.go(-1);
     },
-  },
-  beforeRouteLeave(to, from, next) {
-    if (this.confirmed) {
-      next();
-    } else {
-      if (confirm("Are you sure?")) {
-        next();
-      } else {
-        false;
-      }
-    }
   },
   computed: {
     ...mapState({

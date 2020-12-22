@@ -9,7 +9,13 @@
     <p class="p-4 font-bold">
       {{ character.name }}
     </p>
-    <img :src="character.image" class="mx-auto" alt="" />
+    <img
+      :src="
+        `${character.thumbnail.path}/portrait_incredible.${character.thumbnail.extension}`
+      "
+      class="mx-auto"
+      alt=""
+    />
     <p class="border-b border-red-600 p-4">
       <span class="font-bold">Appearances:</span>
       {{ character.available }}
@@ -30,7 +36,7 @@
       Features
       <template v-slot:content>
         <div
-          v-for="feature in character.features"
+          v-for="feature in character.stories.items"
           :key="feature.name"
           class="p-2 block"
         >
@@ -50,18 +56,10 @@
 
 <script>
 import { mapState } from "vuex";
-import { public_key } from "@/marvel.js";
 import Heading from "@/utilities/Heading.vue";
 export default {
   components: { Heading },
-  data() {
-    return {
-      public_key,
-    };
-  },
-  beforeRouteEnter(to, from, next) {
-    next();
-  },
+
   mounted() {
     this.$store.dispatch("getCharacter", this.$route.params.id);
   },

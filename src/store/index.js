@@ -26,24 +26,25 @@ export default new Vuex.Store({
   actions: {
     getMarvel: ({ commit }, payload) => {
       axios
-        .get(
-          `/${payload}?ts=${time_stamp}&apikey=${public_key}&hash=${hash}`,
-          // `/${payload}?apikey=${public_key}`,
-        )
+        .get(`/${payload}?ts=${time_stamp}&apikey=${public_key}&hash=${hash}`)
         .then((res) => {
           if (payload === "comics") {
             commit("getComics", res.data.data.results);
+            return;
           }
 
           if (payload === "characters") {
             commit("getCharacters", res.data.data.results);
+            return;
           }
         })
         .catch((err) => console.log(err));
     },
     getComic: ({ commit }, payload) => {
       axios
-        .get(`/${payload}?ts=${time_stamp}&apikey=${public_key}&hash=${hash}`)
+        .get(
+          `/comics/${payload}?ts=${time_stamp}&apikey=${public_key}&hash=${hash}`,
+        )
         .then((res) => {
           commit("getComic", res.data.data.results[0]);
         })
@@ -60,9 +61,12 @@ export default new Vuex.Store({
         .catch((err) => console.log(err));
     },
 
-    getFeature: ({ commit }, url) => {
+    getFeature: ({ commit }, payload) => {
+      const comicId = payload.split("/").pop();
       axios
-        .get(`${url}?ts=${time_stamp}&apikey=${public_key}&hash=${hash}`)
+        .get(
+          `/stories/${comicId}?ts=${time_stamp}&apikey=${public_key}&hash=${hash}`,
+        )
         .then((res) => {
           commit("getFeature", res.data.data.results[0]);
         })
@@ -88,19 +92,15 @@ export default new Vuex.Store({
     getComics: function(state, comics) {
       state.comics = [];
       comics.forEach((comic) => {
-        var url = comic.thumbnail.path;
-        var ext = comic.thumbnail.extension;
-        comic.image = `${url}/portrait_incredible.${ext}`;
         state.comics.push(comic);
       });
+      console.log(state.comics);
     },
 
     // GET SINGLE COMIC
     getComic(state, payload) {
-      var url = payload.thumbnail.path;
-      var ext = payload.thumbnail.extension;
-      payload.image = `${url}/portrait_incredible.${ext}`;
       state.comic = payload;
+      console.log(state.comic);
     },
 
     // GET CHARACTERS
@@ -116,10 +116,6 @@ export default new Vuex.Store({
 
     // GET SINGLE CHARACTER
     getCharacter: (state, payload) => {
-      var url = payload.thumbnail.path;
-      var ext = payload.thumbnail.extension;
-      payload.image = `${url}/portrait_incredible.${ext}`;
-      payload.features = payload.stories.items;
       state.character = payload;
       console.log(state.character);
     },
