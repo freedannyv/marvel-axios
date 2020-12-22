@@ -2,7 +2,7 @@
   <div>
     <p class="text-center text-xl font-bold p-4">All Available Comics</p>
     <hr />
-    <div class="grid md:grid-cols-3 lg:grid-cols-4">
+    <div class="grid grid-cols-2 md:grid-cols-4">
       <div v-for="c in comics" :key="c.id">
         <router-link
           :to="{ name: 'comic', params: { id: c.id } }"

@@ -7,13 +7,16 @@
       <div
         v-for="c in character"
         :key="c.id"
-        class="text-white hover:text-red-600 transition h-full w-full flex items-center justify-center"
+        class="text-white transition h-full w-full flex items-center justify-center bg-transparent"
       >
         <router-link
           :to="{ name: 'character', params: { id: c.id } }"
-          class="flex items-center justify-center relative"
+          class="flex items-center justify-center relative hover:text-red-600"
         >
-          <img :src="c.image" class="hover:bg-black" />
+          <img
+            :src="c.image"
+            class="rounded-lg border border-black shadow-md hover:border-red-600"
+          />
           <p class="font-bold text-lg shadow-lg text-center absolute">
             {{ c.name }}
           </p>

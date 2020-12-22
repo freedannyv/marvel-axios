@@ -2,6 +2,8 @@ import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
 import { public_key } from "@/marvel.js";
+import { hash } from "@/marvel.js";
+import { time_stamp } from "@/marvel.js";
 
 Vue.use(Vuex);
 
@@ -13,7 +15,6 @@ export default new Vuex.Store({
     character: {},
     feature: {},
     cart: [],
-    counter: 3,
   },
   // GETTERS
   getters: {
@@ -26,7 +27,8 @@ export default new Vuex.Store({
     getMarvel: ({ commit }, payload) => {
       axios
         .get(
-          `http://gateway.marvel.com/v1/public/${payload}?apikey=${public_key}`,
+          `http://gateway.marvel.com/v1/public/${payload}?ts=${time_stamp}&apikey=${public_key}&hash=${hash}`,
+          // `http://gateway.marvel.com/v1/public/${payload}?apikey=${public_key}`,
         )
         .then((res) => {
           if (payload === "comics") {
@@ -39,20 +41,20 @@ export default new Vuex.Store({
         })
         .catch((err) => console.log(err));
     },
-    getComic: ({ commit }, comicId) => {
+    getComic: ({ commit }, payload) => {
       axios
         .get(
-          `http://gateway.marvel.com/v1/public/comics/${comicId}?apikey=${public_key}`,
+          `http://gateway.marvel.com/v1/public/${payload}?ts=${time_stamp}&apikey=${public_key}&hash=${hash}`,
         )
         .then((res) => {
           commit("getComic", res.data.data.results[0]);
         })
         .catch((err) => console.log(err));
     },
-    getCharacter: ({ commit }, characterId) => {
+    getCharacter: ({ commit }, payload) => {
       axios
         .get(
-          `http://gateway.marvel.com/v1/public/characters/${characterId}?apikey=${public_key}`,
+          `http://gateway.marvel.com/v1/public/characters/${payload}?ts=${time_stamp}&apikey=${public_key}&hash=${hash}`,
         )
         .then((res) => {
           commit("getCharacter", res.data.data.results[0]);
@@ -62,7 +64,7 @@ export default new Vuex.Store({
 
     getFeature: ({ commit }, url) => {
       axios
-        .get(`${url}?apikey=${public_key}`)
+        .get(`${url}?ts=${time_stamp}&apikey=${public_key}&hash=${hash}`)
         .then((res) => {
           commit("getFeature", res.data.data.results[0]);
         })
@@ -129,7 +131,6 @@ export default new Vuex.Store({
       if (state.feature.id === payload) {
         state.cart.push(state.feature);
       }
-      console.log(state.cart);
     },
 
     // REMOVE ITEM FROM CART
